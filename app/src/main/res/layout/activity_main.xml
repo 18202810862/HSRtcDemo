@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <FrameLayout
+        android:id="@+id/localContainer"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp"
+        >
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/remoteContainer"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp"
+        >
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/joinChannel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="加入频道"
+            android:padding="10dp"/>
+
+        <Button
+            android:id="@+id/leaveChannel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="离开频道"
+            android:padding="10dp"/>
+        <Button
+            android:id="@+id/publishCallNotify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="发送通话通知"
+            android:padding="10dp"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,3 @@
+include ':hsrtc'
+include ':app'
+rootProject.name = "MqttStutdy"
