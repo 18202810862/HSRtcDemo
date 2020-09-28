@@ -1,4 +1,4 @@
-package com.chentao.mqttstutdy;
+package com.horsent.voipdemo;
 
 import android.content.Context;
 import android.graphics.Bitmap;
