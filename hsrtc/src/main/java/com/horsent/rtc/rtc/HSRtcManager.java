@@ -6,6 +6,8 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.SurfaceView;
 
+import com.horsent.rtc.SessionControllerListener;
+
 import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
@@ -23,7 +25,7 @@ public class HSRtcManager {
 
     private SurfaceView mLocalView;
     private SurfaceView mRemoteView;
-    private HSRtcListener mHSRtcListener;
+    private SessionControllerListener mSessionControllerListener;
 
     private Handler mHandler = new Handler(Looper.getMainLooper());
 
@@ -37,12 +39,12 @@ public class HSRtcManager {
     }
 
 
-    public void setHSRtcListener(HSRtcListener hsRtcListener) {
-        mHSRtcListener = hsRtcListener;
+    public void setSessionControllerListener(SessionControllerListener sessionControllerListener) {
+        mSessionControllerListener = sessionControllerListener;
     }
 
-    public HSRtcListener getHSRtcListener() {
-        return mHSRtcListener;
+    public SessionControllerListener getSessionControllerListener() {
+        return mSessionControllerListener;
     }
 
     /**
@@ -53,13 +55,13 @@ public class HSRtcManager {
         log("RtcEngine引擎初始化开始");
         try {
             mRtcEngine = RtcEngine.create(context, appid, mRtcEventHandler);
-            if (mHSRtcListener != null) {
-                mHSRtcListener.onEngineInitComplete(HSRtcConstans.CODE_ENGINE_INIT_SUCCESS, "engine init success");
+            if (mSessionControllerListener != null) {
+                mSessionControllerListener.onEngineInitComplete(HSRtcConstans.CODE_ENGINE_INIT_SUCCESS, "engine init success");
             }
         } catch (Exception e) {
             log("RtcEngine引擎初始化出错 -> " + e.toString());
-            if (mHSRtcListener != null) {
-                mHSRtcListener.onEngineInitComplete(HSRtcConstans.CODE_ENGINE_INIT_FAIL, e.toString());
+            if (mSessionControllerListener != null) {
+                mSessionControllerListener.onEngineInitComplete(HSRtcConstans.CODE_ENGINE_INIT_FAIL, e.toString());
             }
         }
         log("RtcEngine引擎初始化成功");
@@ -129,6 +131,7 @@ public class HSRtcManager {
             return;
         }
 
+        //不管当前是否在通话中，都可以调用 leaveChannel，没有副作用。
         mRtcEngine.leaveChannel();
         mLocalView = null;
         mRemoteView = null;
@@ -169,13 +172,8 @@ public class HSRtcManager {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    setupLocalVideo();
-                    if (mHSRtcListener != null) {
-                        mHSRtcListener.onCallConnected(mLocalView);
-                    }
-
-                    if (mHSRtcListener != null) {
-                        mHSRtcListener.onCallOutgoing();
+                    if (mSessionControllerListener != null) {
+                        mSessionControllerListener.onCallOutgoing();
                     }
                 }
             });
@@ -192,6 +190,15 @@ public class HSRtcManager {
         @Override
         public void onUserJoined(int uid, int elapsed) {
             log("远端用户加入频道回调--->");
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    setupLocalVideo();
+                    if (mSessionControllerListener != null) {
+                        mSessionControllerListener.onCallConnected(mLocalView);
+                    }
+                }
+            });
         }
 
         /**
@@ -205,10 +212,9 @@ public class HSRtcManager {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    if (mHSRtcListener != null) {
-                        mHSRtcListener.onCallMemberOffline();
+                    if (mSessionControllerListener != null) {
+                        mSessionControllerListener.onCallMemberOffline();
                     }
-                    leaveChannel();
                 }
             });
 
@@ -231,8 +237,8 @@ public class HSRtcManager {
                         @Override
                         public void run() {
                             setupRemoteVideo(uid);
-                            if (mHSRtcListener != null) {
-                                mHSRtcListener.onCallMemberJoin(mRemoteView);
+                            if (mSessionControllerListener != null) {
+                                mSessionControllerListener.onCallMemberJoin(mRemoteView);
                             }
                         }
                     });

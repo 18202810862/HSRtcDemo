@@ -32,23 +32,16 @@
         android:gravity="center">
 
         <Button
-            android:id="@+id/joinChannel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="加入频道"
-            android:padding="10dp"/>
-
-        <Button
             android:id="@+id/leaveChannel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="离开频道"
+            android:text="挂断"
             android:padding="10dp"/>
         <Button
             android:id="@+id/publishCallNotify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="发送通话通知"
+            android:text="呼叫"
             android:padding="10dp"/>
     </LinearLayout>
 
